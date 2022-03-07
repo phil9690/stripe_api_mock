@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db: 
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: stripe_api_mock_db
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_LOG_CONSOLE: "true"
+    ports:
+      - "3317:3306"
+    networks:
+      default:
+        aliases:
+          - stripe.api.mock
+  app: 
+    build: .
+    command: bundle exec rails s -p 2016 -b '0.0.0.0'
+    #command: bash -c "sleep 30d"
+    volumes: 
+      - ".:/app"
+    ports: 
+      - "2016:2016"
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      MYSQL_DATABASE: stripe_api_mock_db
+      MYSQL_HOST: stripe.api.mock
+      MYSQL_PASSWORD: admin
+      MYSQL_USERNAME: root
