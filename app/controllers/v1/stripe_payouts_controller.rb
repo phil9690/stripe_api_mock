@@ -1,11 +1,11 @@
 module V1
-    class PayoutsController < ApplicationController
+    class StripePayoutsController < ApplicationController
         def index
         end
 
         def show
             id = params[:id]
-            @payout = Payout.find_by(payout_token: id)
+            @payout = StripePayout.find_by(stripe_payout_id: id)
             render json: @payout
         end
     end

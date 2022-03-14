@@ -10,10 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_07_133426) do
+ActiveRecord::Schema.define(version: 2022_03_10_150256) do
 
-  create_table "payouts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "payout_token"
+  create_table "stripe_balance_transaction_fee_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "stripe_balance_transaction_id"
+    t.integer "amount"
+    t.string "application"
+    t.string "currency"
+    t.string "description"
+    t.string "stripe_type"
+    t.index ["stripe_balance_transaction_id"], name: "index_stripe_balance_transaction"
+    t.index ["stripe_balance_transaction_id"], name: "index_stripe_balance_transaction_fee_details"
+  end
+
+  create_table "stripe_balance_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "stripe_balance_transaction_id"
+    t.string "object"
+    t.integer "amount"
+    t.date "available_on"
+    t.datetime "created"
+    t.string "currency"
+    t.string "description"
+    t.integer "exchange_rate"
+    t.integer "fee"
+    t.integer "net"
+    t.string "reporting_category"
+    t.string "source"
+    t.string "status"
+    t.string "stripe_type"
+  end
+
+  create_table "stripe_payout_balance_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "stripe_payout_id"
+    t.bigint "stripe_balance_transaction_id"
+    t.index ["stripe_balance_transaction_id"], name: "index_stripe_payout_balance_transaction"
+    t.index ["stripe_payout_id"], name: "index_stripe_payout_balance_transactions_on_stripe_payout_id"
+  end
+
+  create_table "stripe_payouts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "stripe_payout_id"
     t.integer "amount"
     t.date "arrival_date"
     t.boolean "automatic"
@@ -33,7 +68,7 @@ ActiveRecord::Schema.define(version: 2022_03_07_133426) do
     t.string "source_type"
     t.string "statement_descriptor"
     t.string "status"
-    t.string "type"
+    t.string "stripe_type"
     t.integer "source_balance"
   end
 
