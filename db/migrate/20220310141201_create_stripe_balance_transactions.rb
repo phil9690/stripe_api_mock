@@ -2,7 +2,7 @@ class CreateStripeBalanceTransactions < ActiveRecord::Migration[5.2]
   def change
     create_table :stripe_balance_transactions do |t|
       t.string :stripe_balance_transaction_id
-      t.string :object
+      t.string :stripe_object
       t.integer :amount
       t.date :available_on
       t.datetime :created

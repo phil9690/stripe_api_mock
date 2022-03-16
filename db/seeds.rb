@@ -1,3 +1,16 @@
+### Stripe Account
+
+StripeAccount.create(
+    stripe_account_id: 'acct_1JMxKtFIuIlgkw8M',
+    charges_enabled: true,
+    country: 'GB',
+    display_name: 'Mock Test Account',
+    payouts_enabled: true,
+    statement_descriptor: 'MOCK.COM',
+    stripe_type: 'standard'
+
+)
+
 ### Payout and history for po_1JWACCIAvIfYzcrWqFo0MIVA
 
 payout_1 = StripePayout.create(
@@ -15,7 +28,7 @@ payout_1 = StripePayout.create(
     failure_message: 'Stripe could not process this transfer.',
     livemode: true,
     metadata: nil,
-    method: 'standard',
+    stripe_method: 'standard',
     original_payout: nil,
     reversed_by: nil,
     source_balance: nil,
@@ -25,9 +38,18 @@ payout_1 = StripePayout.create(
     stripe_type: 'bank_account'
 )
 
+i = 0
+while i < 20
+    po_id = "po_1JWACCIAvIfYzcrWqFo0MIf#{i}"
+    po = payout_1.dup
+    po.stripe_payout_id = po_id
+    po.save
+    i += 1
+end
+
 payout_1_balance_transaction_1 = StripeBalanceTransaction.create(
     stripe_balance_transaction_id: 'txn_1JWACCIAvIfYzcrW1mqdmRCl',
-    object: "balance_transaction",
+    stripe_object: "balance_transaction",
     amount: -1390,
     available_on: Time.at(1631232000).to_datetime,
     created: Time.at(1630805456).to_datetime,
@@ -44,7 +66,7 @@ payout_1_balance_transaction_1 = StripeBalanceTransaction.create(
 
 payout_1_balance_transaction_2 = StripeBalanceTransaction.create(
     stripe_balance_transaction_id: 'txn_1JW66vIAvIfYzcrWq3OncFrh',
-    object: "balance_transaction",
+    stripe_object: "balance_transaction",
     amount: 880,
     available_on: Time.at(1631145600).to_datetime,
     created: Time.at(1630789752).to_datetime,
@@ -61,7 +83,7 @@ payout_1_balance_transaction_2 = StripeBalanceTransaction.create(
 
 payout_1_balance_transaction_3 = StripeBalanceTransaction.create(
     stripe_balance_transaction_id: 'txn_1JW66vIAvIfYzcrWq3OncFrh',
-    object: "balance_transaction",
+    stripe_object: "balance_transaction",
     amount: 510,
     available_on: Time.at(1631145600).to_datetime,
     created: Time.at(1630735723).to_datetime,
@@ -75,8 +97,6 @@ payout_1_balance_transaction_3 = StripeBalanceTransaction.create(
     status: "available",
     stripe_type: "application_fee"
 )
-
-require 'pry'; binding.pry
 
 payout_1.stripe_balance_transaction <<  payout_1_balance_transaction_1
 payout_1.stripe_balance_transaction <<  payout_1_balance_transaction_2
@@ -100,7 +120,7 @@ payout_2 = StripePayout.create(
     failure_message: 'Stripe could not process this transfer.',
     livemode: false,
     metadata: nil,
-    method: 'standard',
+    stripe_method: 'standard',
     original_payout: nil,
     reversed_by: nil,
     source_balance: nil,
@@ -112,7 +132,7 @@ payout_2 = StripePayout.create(
 
 payout_2_balance_transaction_1 = StripeBalanceTransaction.create(
     stripe_balance_transaction_id: 'txn_1GHiN6FBTNPFnHZBChDwRGbp',
-    object: 'balance_transaction',
+    stripe_object: 'balance_transaction',
     amount: -49108,
     available_on: Time.at(1583452800).to_datetime,
     created: Time.at(1583032900).to_datetime,
@@ -129,7 +149,7 @@ payout_2_balance_transaction_1 = StripeBalanceTransaction.create(
 
 payout_2_balance_transaction_2 = StripeBalanceTransaction.create(
     stripe_balance_transaction_id: 'txn_1GHAoXFBTNPFnHZBuIR9qVo9',
-    object: 'balance_transaction',
+    stripe_object: 'balance_transaction',
     amount: 50000,
     available_on: Time.at(1583452800).to_datetime,
     created: Time.at(1582903903).to_datetime,
@@ -137,11 +157,11 @@ payout_2_balance_transaction_2 = StripeBalanceTransaction.create(
     description: nil,
     exchange_rate: nil,
     fee: 892,
-    net: -49108,
-    reporting_category: 'payout',
-    source: 'po_1GHiN6FBTNPFnHZBSiareiWD',
+    net: 49108,
+    reporting_category: 'charge',
+    source: 'ch_1GHAoVFBTNPFnHZBX03eqWg3',
     status: 'available',
-    stripe_type: 'payout'
+    stripe_type: 'charge'
 )
 
 payout_2_balance_transaction_2_fee_details_1 = StripeBalanceTransactionFeeDetail.create(
@@ -153,7 +173,7 @@ payout_2_balance_transaction_2_fee_details_1 = StripeBalanceTransactionFeeDetail
   stripe_balance_transaction: payout_2_balance_transaction_2
 )
 
-payout_2_balance_transaction_2_fee_details_1 = StripeBalanceTransactionFeeDetail.create(
+payout_2_balance_transaction_2_fee_details_2 = StripeBalanceTransactionFeeDetail.create(
   amount: 167,
   application: nil,
   currency: 'eur',
@@ -162,51 +182,8 @@ payout_2_balance_transaction_2_fee_details_1 = StripeBalanceTransactionFeeDetail
   stripe_balance_transaction: payout_2_balance_transaction_2
 )
 
-
-# {
-#   "object": "list",
-#   "data": [
-
-#     {
-#       "id": "txn_1GHAoXFBTNPFnHZBuIR9qVo9",
-#       "object": "balance_transaction",
-#       "amount": 50000,
-#       "available_on": 1583452800,
-#       "created": 1582903903,
-#       "currency": "eur",
-#       "description": null,
-#       "exchange_rate": null,
-#       "fee": 892,
-#       "fee_details": [
-#         {
-#           "amount": 725,
-#           "application": null,
-#           "currency": "eur",
-#           "description": "Stripe processing fees",
-#           "type": "stripe_fee"
-#         },
-#         {
-#           "amount": 167,
-#           "application": null,
-#           "currency": "eur",
-#           "description": "VAT",
-#           "type": "tax"
-#         }
-#       ],
-#       "net": 49108,
-#       "reporting_category": "charge",
-#       "source": "ch_1GHAoVFBTNPFnHZBX03eqWg3",
-#       "status": "available",
-#       "type": "charge"
-#     }
-#   ],
-#   "has_more": false,
-#   "url": "/v1/balance_transactions"
-# }
-
-
-
-
+payout_2.stripe_balance_transaction <<  payout_2_balance_transaction_1
+payout_2.stripe_balance_transaction <<  payout_2_balance_transaction_2
 
 # "id": "po_1HN84zFBTNPFnHZBwVxSjVft",
 # "object": "payout",

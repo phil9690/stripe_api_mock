@@ -18,8 +18,8 @@ services:
           - stripe.api.mock
   app: 
     build: .
-    command: bundle exec rails s -p 2016 -b '0.0.0.0'
-    #command: bash -c "sleep 30d"
+    #command: bundle exec rails s -p 2016 -b '0.0.0.0'
+    command: bash -c "sleep 30d"
     volumes: 
       - ".:/app"
     ports: 

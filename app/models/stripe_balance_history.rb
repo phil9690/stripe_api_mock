@@ -1,9 +1,11 @@
 class StripeBalanceHistory
     include ActiveModel::Model
-    include ActiveModel::Serializers::JSON
 
-    #belongs_to :payout, foreign_key: :source
-   #self.table_name = :stripe_balance_histories
+    # include ActiveModel::Serializers::JSON
+
+    # def payout_balance_history(stripe_payout_id)
+        
+    # end
 
     # def attributes
     #     {

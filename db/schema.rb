@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_10_150256) do
+ActiveRecord::Schema.define(version: 2022_03_15_172336) do
+
+  create_table "stripe_accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "stripe_account_id"
+    t.boolean "charges_enabled"
+    t.string "country"
+    t.string "display_name"
+    t.boolean "payouts_enabled"
+    t.string "statement_descriptor"
+    t.string "stripe_type"
+  end
 
   create_table "stripe_balance_transaction_fee_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "stripe_balance_transaction_id"
@@ -25,7 +35,7 @@ ActiveRecord::Schema.define(version: 2022_03_10_150256) do
 
   create_table "stripe_balance_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "stripe_balance_transaction_id"
-    t.string "object"
+    t.string "stripe_object"
     t.integer "amount"
     t.date "available_on"
     t.datetime "created"
@@ -62,7 +72,7 @@ ActiveRecord::Schema.define(version: 2022_03_10_150256) do
     t.string "failure_message"
     t.boolean "livemode"
     t.json "metadata"
-    t.string "method"
+    t.string "stripe_method"
     t.string "original_payout"
     t.string "reversed_by"
     t.string "source_type"
@@ -70,6 +80,7 @@ ActiveRecord::Schema.define(version: 2022_03_10_150256) do
     t.string "status"
     t.string "stripe_type"
     t.integer "source_balance"
+    t.index ["stripe_payout_id"], name: "index_stripe_payouts_on_stripe_payout_id", unique: true
   end
 
 end

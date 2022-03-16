@@ -1,35 +1,66 @@
+# module V1
+#     class StripePayoutSerializer < ActiveModel::Serializer
+#         attribute :id
+#         attribute :stripe_object, key: :object
+#         attribute :amount
+#         attribute :arrival_date
+#         attribute :automatic
+#         attribute :balance_transaction
+#         attribute :created
+#         attribute :currency
+#         attribute :description
+#         attribute :destination
+#         attribute :failure_balance_transaction
+#         attribute :failure_code
+#         attribute :failure_message
+#         attribute :livemode
+#         attribute :metaitem
+#         attribute :stripe_method, key: :method
+#         attribute :original_payout
+#         attribute :reversed_by
+#         attribute :source_balance
+#         attribute :source_type
+#         attribute :statement_descriptor
+#         attribute :status
+#         attribute :stripe_type, key: :type
+
+#         def id
+#             object.stripe_payout_id
+#         end
+#     end
+# end
+
 module V1
-    class StripePayoutSerializer < ActiveModel::Serializer
-        def attributes
-            {
-                'id': id,
-                'object': object,
-                'amount': amount,
-                'arrival_date': arrival_date,
-                'automatic': automatic,
-                'balance_transaction': balance_transaction,
-                'created': created,
-                'currency': currency,
-                'description': description,
-                'destination': destination,
-                'failure_balance_transaction': failure_balance_transaction,
-                'failure_code': failure_code,
-                'failure_message': failure_message,
-                'livemode': livemode,
-                'metadata': metadata,
-                'method': method,
-                'original_payout': original_payout,
-                'reversed_by': reversed_by,
-                'source_balance': source_balance,
-                'source_type': source_type,
-                'statement_descriptor': statement_descriptor,
-                'status': status,
-                'type': stripe_type
-            }
+    class StripePayoutSerializer < BaseSerializer
+        def self.url
+            'v1/payouts'
         end
-    
-        def id
-            stripe_payout_id
+
+        def self.item_attributes(item)
+            {
+                'id': item.stripe_payout_id,
+                'object': item.stripe_object,
+                'amount': item.amount,
+                'arrival_date': item.arrival_date.to_datetime.to_i,
+                'automatic': item.automatic,
+                'balance_transaction': item.balance_transaction,
+                'created': item.created.to_datetime.to_i,
+                'currency': item.currency,
+                'description': item.description,
+                'destination': item.destination,
+                'failure_balance_transaction': item.failure_balance_transaction,
+                'failure_code': item.failure_code,
+                'livemode': item.livemode,
+                'metadata': item.metadata,
+                'method': item.stripe_method,
+                'original_payout': item.original_payout,
+                'reversed_by': item.reversed_by,
+                'source_balance': item.source_balance,
+                'source_type': item.source_type,
+                'statement_descriptor': item.statement_descriptor,
+                'status': item.status,
+                'type': item.stripe_type
+            }
         end
     end
 end

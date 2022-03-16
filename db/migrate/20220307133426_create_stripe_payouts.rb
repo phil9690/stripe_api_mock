@@ -2,6 +2,7 @@ class CreateStripePayouts < ActiveRecord::Migration[5.2]
   def change
     create_table :stripe_payouts do |t|
       t.string :stripe_payout_id
+      t.index :stripe_payout_id, unique: true
       t.integer :amount
       t.date :arrival_date
       t.boolean :automatic
@@ -15,7 +16,7 @@ class CreateStripePayouts < ActiveRecord::Migration[5.2]
       t.string :failure_message
       t.boolean :livemode
       t.json :metadata
-      t.string :method
+      t.string :stripe_method
       t.string :original_payout
       t.string :reversed_by
       t.string :source_type
